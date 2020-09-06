@@ -19,6 +19,8 @@ struct ContentView: View {
     @State var bGuess: Double
     @State var showAlert = false
     
+    @ObservedObject var timer = TimeCounter()
+    
     func computeScore() -> Int {
         let rDiff = rGuess - rTarget
         let gDiff = gGuess - gTarget
@@ -44,7 +46,7 @@ struct ContentView: View {
                 VStack {
                     ZStack(alignment: .center) {
                         Color(red: rGuess, green: gGuess, blue: bGuess)
-                        Text("30")
+                        Text(String(timer.counter))
                             .padding(.all, 5)
                             .background(Color.white)
                             .mask(Circle())
@@ -54,7 +56,10 @@ struct ContentView: View {
                 }
             }
             
-            Button(action: { self.showAlert = true }) {
+            Button(action: {
+                self.showAlert = true
+                self.timer.killTimer()
+            }) {
                 Text("Hit Me!")
             }.alert(isPresented: $showAlert) { () -> Alert in
                 Alert(
